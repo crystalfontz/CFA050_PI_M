@@ -21,17 +21,15 @@ The official [Raspberry Pi OS distribution](https://www.raspberrypi.com/software
 
 Information on the OS included with the CFA050-PI-M can be [found here](OS-Setup.md).
 
-## Further Information / Use
+## Further Information
 
 ### Screen Orientation
 
 Display panel orientation can be conigured using the "Screen Configuration" utility located in the Desktop main menu under Preferences.
-It can also be changed from the command line by using "xrandr --display :0.0 --output DSI-1 --rotate \<direction\>", where \<direction\> can be normal, left, right, inverted.
 
 ### On-screen Keyboard
 
-The "matchbox-keyboard" package has been installed to provide and on-screen keyboard for use with a touch-panel.
-The "Keyboard" utility can be found in the Desktop main menu under Accessories.
+If an on-screen keyboard is needed, use the the "Keyboard" utility which can be found in the Desktop main menu under Accessories.
 
 ### GPIOs
 
@@ -39,3 +37,17 @@ The "gpiod" package is installed for the 40-pin header and extra 6-pin GPIO cont
 Running "gpiodetect" will list the avaliable GPIO chips. The RapberryPi 40pin header will be listed as "raspberrypi-exp-gpio". The Extra 6 GPIOs on the CFA050 will be listed as "pcf8574" (the pcf8574 has 8 GPIO pins, but the first two are not availible for user control).
 The command "gpioinfo" will display a full list of GPIOs, and thier names.
 To view the state of a GPIO pin use the command "gpioget". To set the state of a GPIO pin, use "gpioset".
+
+### USB Options
+
++ JMP1: When closed - connects the USB connector OTG_ID pin to the CM4's OTG_ID pin.
++ JMP2: When closed - connects the CM4's OTG_ID pin to a pull-down resistor.
+
+If the device connected to the CFA050-PI-M's USB connector should determine device or host mode, close JMP1 and leave JMP2 open.  
+To force the CFA050-PI-M to be a USB host, 
+
+### Power Supply Options
+
++ JMP3: When closed - connects the USB connectors 5V pin to the CFA050-PI-M's and CM4's VDD (5V) supply.
++ JMP4: When closed - connects the center pin of the barel power connector, and J12 pin1 to the USB connectors 5V pin.
++ JMP5: When closed - connects J12 pin3 to the CFA050-PI-M's and CM4's VDD (5V) supply.

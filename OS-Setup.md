@@ -1,7 +1,9 @@
 # Crystalfontz CFA050-PI-M OS Setup
 
 This document describes the process to replicate the Raspberry Pi OS that is supplied with the CFA050-PI-M when purchased from Crystalfontz.  
-The Raspberry Pi OS is a light-weight free operating system based on Debian GNU/Linux.
+The Raspberry Pi OS is a light-weight free operating system based on Debian GNU/Linux.  
+
+The following information assumes the user has a intermediate level of Linux OS knowledge (console use, root privileges, etc).  
 
 ## Writing the OS to a microSD card
 
@@ -20,7 +22,7 @@ We suggest you use the 64-bit version of the OS with the Desktop.
 
 ## Configuring the OS for the CFA050-PI-M
 
-Once the Raspberry Pi OS has been written to the microSD card some boot options need to be changed to set it up for the CFA050-PI-M.
+Once the Raspberry Pi OS has been written to the microSD card some boot options need to be changed to set it up for the CFA050-PI-M.  
 
 1. Re-insert the microSD card into the computer.
 2. Using your favorite text editor, edit the file "config.txt" on the microSD card
@@ -54,16 +56,31 @@ dtoverlay=crystalfontz-cfa050_pi_m,captouch=on
 ```
 ## Extra Software / Configuration
 
-### LCD Backlight Brightness
+### Power On/Off Backlight Control
 
-+ xfce4-power-manager, xfce4-power-manager-plugins
-Add power managment to xfce panel.
-Turn off automatic backlight powersave and backlight dimming.
-
-Power on/off control:
-+ Script '/lib/systemd/system/cfa050-backlight-off.service':
+On power-on/reboot the RaspberryPi OS may not set the backlight brightness to the desired level.  
+To make sure this always does occour:
++ Add the script file '/lib/systemd/system/cfa050-backlight-on.service' with the contents:
 ```
-Unit]
+[Unit]
+Description=Turns on CFA050 backlight on startup
+DefaultDependencies=no
+After=lightdm.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/bin/echo 255 > /sys/class/backlight/lcd-backlight/brightness'
+
+[Install]
+WantedBy=graphical.target
+```
++ The value of 255 (maximum brightness) may be changed to a different value is needed.
++ Run "systemctl enable cfa050-backlight-on.service" and "systemctl daemon-reload".
+
+To make sure the backlight is turned off on CFA050 power-off:
++ Add the script file '/lib/systemd/system/cfa050-backlight-off.service' with the contents:
+```
+[Unit]
 Description=Turns off CFA050 backlight on shutdown/reboot
 DefaultDependencies=no
 Before=umount.target
@@ -74,28 +91,24 @@ ExecStart=/bin/sh -c '/bin/echo 0 > /sys/class/backlight/lcd-backlight/brightnes
 
 [Install]
 WantedBy=reboot.target halt.target poweroff.target
-
 ```
-+ Script '/lib/systemd/system/cfa050-backlight-on.service':
-```
-[Unit]
-Description=Turns on CFA050 backlight on startup
-DefaultDependencies=no
++ Then run "systemctl enable cfa050-backlight-off.service" and "systemctl daemon-reload".
 
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c '/bin/echo 255 > /sys/class/backlight/lcd-backlight/brightness'
+### Desktop LCD Brightness Control
 
-[Install]
-WantedBy=graphical.target
+The XFCE Power Manager can be used to control backlight brightness from the Desktop.  
++ Add the "xfce4-power-manager" and "xfce4-power-manager-plugins" packages.
++ Add the power managment icon to the XFCE panel (right-click on the panel).
++ (optional) Turn off automatic backlight powersave and backlight dimming.
 
-```
-+ systemctl enable cfa050-backlight-on.service
-+ systemctl enable cfa050-backlight-off.service
-+ systemctl daemon-reload
-+ reboot
+### Other CFA050-PI-M OS Modifications
 
-## 
+The following modifications have also been made to the standard RaspberryPi OS:
++ Changed splash (bootup) image (/usr/share/plymouth/themes/pix/splash.png)
++ Changed desktop background (/media/mark/rootfs/usr/share/rpd-wallpaper/clouds.png)
++ Changed XFCE main-menu logo (/media/mark/rootfs/usr/share/icons/PiXflat/XXxXX/places)
++ Changed Firefox default website (/etc/chromium/master_preferences)
++ Added on-screen keyboard package "matchbox-keyboard"
 
 
 
