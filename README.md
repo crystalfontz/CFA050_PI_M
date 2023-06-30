@@ -1,4 +1,4 @@
-# CFA050_PI_M
+# Crystalfontz CFA050-PI-M Series Information
 
 ## Hardware Introduction
 
@@ -14,6 +14,13 @@ Features include:
 + An extra six GPIO lines from an on-board I2C IO expander IC
 + Battery backed up real time clock
 + Flexible power supply options (barrel-jack, Micro USB or PCB header)
+
+## Quick Start Guide
+
+To be completed:
++ Powering on
++ User login
++ Mouse / Keyboard connection
 
 ## Linux / RaspberryPi OS Setup
 
