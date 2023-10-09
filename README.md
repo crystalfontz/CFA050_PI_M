@@ -52,8 +52,9 @@ If a MicroSD card needs to be written with the OS image:
 + Install a image writing utility (rpi imager, rufus, img etcher, etc) on a PC
 + Download the CFA050-PI-M compressed OS image file from the Crystalfontz Website (todo: add link)
 + Plug the MicroSD card into the PC using a USB MicroSD card reader or similar
-+ Run the image writing utility and write the CFA050-PI-M compressed image file to the card (the image file may need to be uncompressed first).
-++ If using the official Raspberry Pi Imager utility, under "Operating system" select "use custom".
++ Run the image writing utility and write the CFA050-PI-M compressed image file to the card (the image file may need to be uncompressed first)
++ If using the official Raspberry Pi Imager utility, under "Operating system" select "use custom"
++ Make sure writing to the MicroSD card has completed, then remove the MicroSD card and insert in the slot on the CFA050-PI-M
 
 ### USB Device Connection (Keyboard/Mouse)
 
