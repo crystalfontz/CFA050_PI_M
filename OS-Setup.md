@@ -1,145 +1,91 @@
-# Crystalfontz CFA050-PI-M OS Setup
+# Crystalfontz CFA050-PI-M Getting Started Guide
 
-This document describes the process to replicate the Raspberry Pi OS that is supplied with the CFA050-PI-M when purchased from Crystalfontz.  
-The Raspberry Pi OS is a light-weight free operating system based on Debian GNU/Linux.  
+This document outlines how to install the Raspberry Pi operating system for use with the CFA050A0-PI-MBxT family of displays.
+The Raspberry Pi OS is a light-weight, free operating system based on Debian GNU/Linux.  
 
-The following information should be performed on a Linux PC/Laptop, and assumes the user has a intermediate level of Linux OS knowledge (console use, root privileges, etc).  
+The following steps should be performed preferably on a Windows PC/Laptop, and assumes the user has an intermediate level of Linux OS knowledge (console use, root privileges, etc).  
 
-## Writing the OS to a microSD card
+Part variants:
++ CFA050A0-PI-MBCT: Capacitive touch display
++ CFA050A0-PI-MBNT: Non-touch display
 
-The Raspberry Pi foundation supplies a very easy to use utility to write the Raspberry Pi OS to a microSD card.  
-It is advised that you follow this method unless you have a specific reason not to do so.  
+## OS Configuration
 
-1. Insert a microSD card into your computer.
-2. Download and run the [Raspberry Pi Imager available here](https://www.raspberrypi.com/software/).
-3. Click "Choose OS", and select "Raspberry PI OS (other)", and then "Raspberry Pi OS (64-bit)".
-4. Click "Choose Storage" and select the microSD card you inserted.
-5. Click the gear icon button in the bottom right-hand corner of the software. Change the options as necessary.
-  (a username of "pi" and password of "raspberry" is used on the Crystalfontz supplied microSD card)
-6. Click the "Write" button to write the OS to the microSD card.
-7. When complete, remove the microSD card from the computer.
+The required OS configurations for use with the CFA050A0-PI-MBxT family of displays are outlined below. The Raspberry Pi foundation supplies a very easy-to-use utility to write the Raspberry Pi OS to a microSD card/eMMC storage.
+It is advised that you follow this method unless you have a specific reason not to do so.
 
-## Configuring the OS for the CFA050-PI-M
+### Setting up the image
 
-Once the Raspberry Pi OS has been written to the microSD card some boot options need to be changed to set it up for the CFA050-PI-M.  
+1. Download and install the Raspberry Pi Imager utility from the Raspberry Pi software page available here: https://www.raspberrypi.com/software/
+2. Once installed, open the utility and from the device dropdown select “Raspberry Pi 4”
+3. Select Choose OS and from the window that opens, select “Raspberry Pi OS (other)”
+4. Choose any 64-bit OS of your preference
 
-1. Re-insert the microSD card into the computer.
-2. Using your favorite text editor, edit the file "config.txt" (microSD card bootfs parition).
-3. At the very bottom of the file add the following section:
-	```
-	[cm4]
-	#Settings for the Crystafontz CFA050-PI-M series of modules
-	#enable I2C and SPI peripherals
-	dtparam=i2c_arm=on
-	dtparam=spi=on
-	#enable I2C-0 pins 44/45 (appears as i2c-10)
-	dtparam=i2c_vc=on
-	#enable the required video driver to use DSI1
-	dtoverlay=vc4-kms-v3d
-	ignore_lcd=1
-	#display orientation (0=default, 1=90deg, 2=180deg, 3=270deg)
-	display_lcd_rotate=0
-	#enable the overlay for the CFA050-PI-M
-	dtoverlay=crystalfontz-cfa050_pi_m
-	#misc settings
-	camera_auto_detect=0
-	max_framebuffers=2
-	#enable USB on-the-go mode
-	otg_mode=1
-	```
-3. If the CFA050-PI-M has a capacitive touch screen, the "captouch=on" option needs to be added. Change:
-	```
-	dtoverlay=crystalfontz-cfa050_pi_m
-	```
-	to:  
-	```
-	dtoverlay=crystalfontz-cfa050_pi_m,captouch=on
-	```
+#### For usage with a CM4-lite (without eMMC)
+5.	Plug in the SD card to be used for the OS installation
+6.  Select Choose Storage and select the previously inserted SD card
+7.	Select Next on the utility and when prompted to apply OS customization settings, select Edit Settings and configure the fields as desired. This step is highly recommended as it prevents the first boot setup by default
+8.	Once the settings have been configured, select Yes, and the SD card will begin to be written to by the utility
 
-## Extra software / configuration
+#### For usage with a CM4 (with eMMC)
+5.  Install the required USB drivers and utility for the flashing process, namely, usbboot, provided by Raspberry Pi and available here: https://github.com/raspberrypi/usbboot
+6.  While shorting TP3 and pin 4 of J7 (the pin closest to the uUSB port), plug in a microUSB cable between the board and PC. For shorting the two points, a tweezer works well. Please be careful to ensure the tweezer does not come into contact with pin 1 of J7 as this will short the board between VDD and GND and may cause permanent damage to the CFA050A0-PI-MBxT and/or the CM4
+8.  If using Windows, to ensure the device has been booted in the correct mode, navigate to Device Manager and look for BCMXXXX Boot under "Universal Serial Bus devices"
+8.  Run the previously installed rpiboot utility (this is part of the usbboot package). This will make the CM4 eMMC storage visible on the PC allowing it to be written to via Raspberry Pi Imager
+9.  Select Next on the utility and when prompted to apply OS customization settings, select Edit Settings and configure the fields as desired. This step is highly recommended as it prevents the first boot setup by default
+10.	Once the settings have been configured, select Yes, and the eMMC storage will begin to be written to by the utility
 
-### Power on/off backlight control
+### Configuring the OS for the CFA050A0-PI-MBxT 
+Once the Raspberry Pi OS has been written to the microSD card/eMMC storage, some boot options need to be changed to set it up for the CFA050A0-PI-MBxT family of displays.  
+1. On the newly flashed SD card/eMMC navigate to the root directory of the storage medium and open the file named “config.txt” (bootfs partition)
+2. Add the following lines to the bottom of the file. Any duplicate parameters in the file will be overwritten
+```
+#Settings for the Crystafontz CFA050-PI-M series of modules
+#enable I2C and SPI peripherals
+dtparam=i2c_arm=on
+dtparam=spi=on
+#enable I2C-0 pins 44/45 (appears as i2c-10)
+dtparam=i2c_vc=on
+#enable the required video driver to use DSI1
+dtoverlay=vc4-kms-v3d
+ignore_lcd=1
+#display orientation (0=default, 1=90deg, 2=180deg, 3=270deg)
+display_lcd_rotate=0
+#enable the overlay for the CFA050-PI-M
+dtoverlay=crystalfontz-cfa050_pi_m
+#misc settings
+camera_auto_detect=0
+max_framebuffers=2
+#enable USB on-the-go mode
+otg_mode=1
+```
+3.	In the case that a CFA050A0-PI-MBCT (capacitive touch display variant) is used, the following line needs to be changed from:
+```
+dtoverlay=crystalfontz-cfa050_pi_m
+```
+to
+```
+dtoverlay=crystalfontz-cfa050_pi_m,captouch=on
+```
 
-On power-on/reboot the RaspberryPi OS may not set the backlight brightness to the desired level as the systemd backlight service appears to be unreliable.  
-To make sure this always does occour (all on the microSD card rootfs parition):
-+ Add the script file '/lib/systemd/system/cfa050-backlight-on.service' with the contents:
-	```
-	[Unit]
-	Description=Turns on CFA050 backlight on startup
-	DefaultDependencies=no
-	After=lightdm.service systemd-backlight@.service
+## Additional Configurations
 
-	[Service]
-	Type=oneshot
-	ExecStart=/bin/sh -c '/bin/echo 255 > /sys/class/backlight/lcd-backlight/brightness'
+### Correcting the brightness of the display panel on first boot
 
-	[Install]
-	WantedBy=graphical.target
-	```
-+ The value of 255 (maximum brightness) may be changed to a different value is needed.
-+ Add the symlink "ln -sf /lib/systemd/system/cfa050-backlight-on.service etc/systemd/system/graphical.target.wants/cfa050-backlight-on.service".
+It is likely that on the first boot, the display panel of the CFA050A0-PI-MBxT will be quite dim. To correct the brightness of the display, open Terminal, navigate to /sys/class/backlight/lcd-backlight, and open the file named brightness. The command to do so is as below:
+```
+sudo nano /sys/class/backlight/lcd-backlight/brightness
+```
+Change the value in the file to 255 to increase the panels' brightness to maximum (alternatively, to any brightness level in the range of 0-255 that the user may prefer)
 
-To make sure the backlight is turned off on CFA050 power-off:
-+ Add the script file '/lib/systemd/system/cfa050-backlight-off.service' with the contents:
-	```
-	[Unit]
-	Description=Turns off CFA050 backlight on shutdown/reboot
-	DefaultDependencies=no
-	Before=umount.target
+### Correcting the orientation of the display 
 
-	[Service]
-	Type=oneshot
-	ExecStart=/bin/sh -c '/bin/echo 0 > /sys/class/backlight/lcd-backlight/brightness'
+When manually setting up the OS, the display may appear upside down. To correct the orientation, with the CFA050A0-PI-MBxT booted up, navigate to Start, Preferences, and Screen Configuration.
 
-	[Install]
-	WantedBy=reboot.target halt.target poweroff.target
-	```
-+ Add the symlink "ln -sf /lib/systemd/system/cfa050-backlight-off.service etc/systemd/system/poweroff.target.wants/cfa050-backlight-off.service"
-+ Add the symlink "ln -sf /lib/systemd/system/cfa050-backlight-off.service etc/systemd/system/halt.target.wants/cfa050-backlight-off.service"
-+ Add the symlink "ln -sf /lib/systemd/system/cfa050-backlight-off.service etc/systemd/system/reboot.target.wants/cfa050-backlight-off.service"
+When the subsequent Screen Layout Editor window opens, navigate to Layout, Screens, DSI-1, Orientation, and select “inverted”. This will invert the display and all touch co-ordinates (if the capacitive touch variant of the display is used) to the correct orientation
 
-### Default user / password
-Default username of 'pi' and password of 'raspberry' have been used (set using the Raspberry Pi Imager during microSD card creation).
+### On-screen keyboard
 
-### Disable screen-blanking
-By default the Raspberry Pi OS blanks the screen after 10 mins of innactivity. This is disabled.  
-+ Edit "/etc/xdg/lxsession/LXDE/autostart" and "/etc/xdg/lxsession/LXDE-pi/autostart" (microSD card rootfs parition). A append both with the following:  
-	```
-	@xset s noblank
-	@xset s off
-	@xset -dpms
-	```
+If an on-screen keyboard is needed, use the "Keyboard" utility which can be found in the Desktop main menu under Accessories
 
-### Change desktop icons
-The default Raspberry Pi OS icon is changed to a Crystalfontz icon.  
-Appropriatly sized icons are copied into the "/usr/share/icons/PiXflat/XXxXX/places" (microSD card rootfs parition) directories, where "XXxXX" are
-sizes 16x16, 24x24, 32x32 and 48x48.  
-(these changes may be overwritten with an OS update).
 
-### Change OS splash image
-The default Raspberry Pi OS splash screen has been changed to a Crystalfonz logo image.  
-The file replaced is "/usr/share/plymouth/themes/pix/splash.png" (microSD card rootfs parition).
-
-### Change desktop background
-The default Raspberry Pi OS desktop image has been replaced by a photo with Crystalfontz logo.  
-The file replaced is "/usr/share/rpd-wallpaper/clouds.png" (microSD card rootfs parition).
-
-### Added website to chromium browser
-The Crystalfontz home page is opened on the first running on the Chromium web browser (default browser in Raspberry Pi OS).  
-+ Edit "/etc/chromium/master_preferences" (microSD card rootfs parition) and change the line:  
-	```
-	"first_run_tabs":["https://welcome.raspberrypi.org/raspberry-pi-os?id=UNIDENTIFIED"]
-	```  
-	to  
-	```
-	"first_run_tabs":["https://www.crystalfontz.com","https://welcome.raspberrypi.org/raspberry-pi-os?id=UNIDENTIFIED"]
-	```
-
-### Remove first start setup
-On first boot the Raspberry Pi OS normally runs through a user setup process. This process requires a keyboad and mouse, so these are disabled:
-+ Delete the files "/etc/xdg/autostart/piwiz.desktop" and "/etc/xdg/autostart/pprompt.desktop" (microSD card rootfs parition).
-
-### Creating new image of microSD card
-To create a new IMG file from the modified MicroSD card so it can be replicated easily:
-+ fdisk /dev/sdX (where sdX is the MicroSD device). Note last sector number of last parition, then exit.
-+ dd if=/dev/sdX of=usdimage.img bs=512 count=<last-sector-num + 1>
