@@ -12,7 +12,7 @@ Part variants:
 ## OS Configuration
 
 The required OS configurations for use with the CFA050A0-PI-MBxT family of displays are outlined below. The Raspberry Pi foundation supplies a very easy-to-use utility to write the Raspberry Pi OS to a microSD card/eMMC storage.
-It is advised that you follow this method unless you have a specific reason not to do so.
+It is advised that you follow this method unless you have a specific reason not to do so. Already have the OS configured? Jump to the [config.txt changes](#configuring-the-os-for-the-cfa050a0-pi-mbxt).
 
 ### Setting up the image
 
