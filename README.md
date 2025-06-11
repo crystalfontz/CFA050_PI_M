@@ -40,7 +40,8 @@ Note: in this configuration, a power supply connected to the barrel jack will al
 
 ### First Power-On / Operating System Login
 
-If your CFA050A0-PI-MBxT was supplied by Crystalfontz with a Compute Module pre-installed, the Raspberry Pi OS will be ready to go. If not, please refer to our [Operating System Guide](OS-Setup.md).
+If your CFA050A0-PI-MBxT was supplied by Crystalfontz with a Compute Module pre-installed, the Raspberry Pi OS will be ready to go.  
+If not, OS image files can be found to [download here](https://github.com/crystalfontz/CFA050_PI_M/releases), or refer to our [Operating System Guide](OS-Setup.md).
 
 On applying power to the CFA050A0-PI-MBxT module, a green power/activity LED on the rear of the module should light and then start blinking with EMMC/MicroSD drive read activity.
 After approximately 30 seconds (boot time may be longer on first boot due to extra OS initialisation routines), the LCD panel should be lit and display the Linux OS desktop.
