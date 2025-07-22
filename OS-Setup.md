@@ -78,13 +78,52 @@ echo 255 > /sys/class/backlight/lcd-backlight/brightness
 ```
 This command will set panels' backlight brightness to maximum (alternatively, to any brightness level in the range of 0-255 that the user may prefer)
 
+### Power On/Off Backlight Control
+
+On power-on/reboot the RaspberryPi OS may not set the backlight brightness to the desired level.  
+To make sure this always does occour:
++ Add the script file '/lib/systemd/system/cfa050-backlight-on.service' with the contents:
+```
+[Unit]
+Description=Turns on CFA050 backlight on startup
+DefaultDependencies=no
+After=lightdm.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/bin/echo 255 > /sys/class/backlight/lcd-backlight/brightness'
+
+[Install]
+WantedBy=graphical.target
+```
++ The value of 255 (maximum brightness) may be changed to a different value is needed.
++ Run "systemctl enable cfa050-backlight-on.service" and "systemctl daemon-reload".
+
+To make sure the backlight is turned off on CFA050 power-off:
++ Add the script file '/lib/systemd/system/cfa050-backlight-off.service' with the contents:
+```
+[Unit]
+Description=Turns off CFA050 backlight on shutdown/reboot
+DefaultDependencies=no
+Before=umount.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c '/bin/echo 0 > /sys/class/backlight/lcd-backlight/brightness'
+
+[Install]
+WantedBy=reboot.target halt.target poweroff.target
+```
++ Then run "systemctl enable cfa050-backlight-off.service" and "systemctl daemon-reload".
+
 ### Correcting the orientation of the display 
 
 When manually setting up the OS, the display may appear upside down. To correct the orientation, with the CFA050A0-PI-MBxT booted up, navigate to Start, Preferences, and Screen Configuration.
 
-When the subsequent Screen Layout Editor window opens, navigate to Layout, Screens, DSI-1, Orientation, and select “inverted”. This will invert the display and all touch co-ordinates (if the capacitive touch variant of the display is used) to the correct orientation
+When the subsequent Screen Layout Editor window opens, navigate to Layout, Screens, DSI-1, Orientation, and select “inverted”. This will invert the display and all touch co-ordinates (if the capacitive touch variant of the display is used) to the correct orientation.
 
 ### On-screen keyboard
 
-If an on-screen keyboard is needed, use the "Keyboard" utility which can be found in the Desktop main menu under Accessories
+If an on-screen keyboard is needed, click the keyboard icon next to the clock on the desktop panel.
+
 
