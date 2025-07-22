@@ -68,17 +68,17 @@ dtoverlay=crystalfontz-cfa050_pi_m,captouch,cm5
 dtoverlay=crystalfontz-cfa050_pi_m,captouch
 ```
 
-## Additional Configurations
+## Additional Configuration / Notes
 
-### Correcting the brightness of the display panel on first boot
+### Manual backlight brightness control
 
-It is possible that on the first boot, the display panel of the CFA050A0-PI-MBxT will be quite dim. To correct the brightness of the display, open Terminal, navigate to /sys/class/backlight/lcd-backlight, and open the file named brightness. The command to do so is as below:
+The displays backlight brightness can be adjusted by changing the value in the "/sys/class/backlight/lcd-backlight/brightness" control file. The adjustment range is 0 (off) to 255 (full-brightness).
+For example, to adjust the backlight brightness to full-brightness, run the command:
 ```
 echo 255 > /sys/class/backlight/lcd-backlight/brightness
 ```
-This command will set panels' backlight brightness to maximum (alternatively, to any brightness level in the range of 0-255 that the user may prefer)
 
-### Power On/Off Backlight Control
+### Automatic startup / shutdown backlight control
 
 On power-on/reboot the RaspberryPi OS may not set the backlight brightness to the desired level.  
 To make sure this always does occour:
