@@ -72,7 +72,8 @@ dtoverlay=crystalfontz-cfa050_pi_m,captouch
 
 ### Manual backlight brightness control
 
-The displays backlight brightness can be adjusted by changing the value in the "/sys/class/backlight/lcd-backlight/brightness" control file. The adjustment range is 0 (off) to 255 (full-brightness).
+The displays backlight brightness can be adjusted by changing the value in the "/sys/class/backlight/lcd-backlight/brightness" control file.
+The adjustment range is 0 (off) to 255 (full-brightness).  
 For example, to adjust the backlight brightness to full-brightness, run the command:
 ```
 echo 255 > /sys/class/backlight/lcd-backlight/brightness
